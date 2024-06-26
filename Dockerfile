@@ -1,17 +1,9 @@
-FROM openjdk:17-jdk-alpine as build
+FROM openjdk:17-jdk-slim
 
 EXPOSE 8080
 
-COPY . /app
 WORKDIR /app
 
-RUN chmod +x mvnw
-RUN ./mvnw package -DskipTests
-RUN mv -f target/*.jar taller_app.jar
+COPY target/taller_app-0.0.1-SNAPSHOT.jar app/taller_app.jar
 
-COPY --from=build /app/taller_app.jar .
-
-RUN useradd runtime
-USER runtime
-
-ENTRYPOINT ["java", "-jar", "taller_app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/taller_app.jar"]
