@@ -7,7 +7,6 @@ RUN chmod +x mvnw
 RUN ./mvnw package -DskipTests
 RUN mv -f target/*.jar taller_app.jar
 
-FROM openjdk:17-jre-slim
 
 ARG PORT
 ENV PORT=${PORT}
