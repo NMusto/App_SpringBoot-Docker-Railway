@@ -1,9 +1,21 @@
-FROM openjdk:17-jdk-slim
+FROM openjdk:17-jdk-slim AS build
 
-EXPOSE 8080
+COPY . /app
+WORKDIR /app
 
-ARG JAR_FILE=target/taller_app-0.0.1-SNAPSHOT.jar
+RUN chmod +x mvnw
+RUN ./mvnw package -DskipTests
+RUN mv -f target/*.jar taller_app.jar
 
-COPY ${JAR_FILE} taller_app.jar
+FROM openjdk:17-jre-slim
 
-ENTRYPOINT ["java", "-jar", "taller_app.jar"]
+ARG PORT
+ENV PORT=${PORT}
+
+COPY --from=build /app/taller_app.jar .
+
+RUN useradd runtime
+USER runtime
+
+ENTRYPOINT ["java", "-Dserver.port=${PORT}", "-jar", "taller_app.jar"]
+
