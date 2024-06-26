@@ -1,15 +1,17 @@
-FROM openjdk:17-jdk-alpine
+FROM openjdk:17-jdk-alpine as build
 
 EXPOSE 8080
 
-WORKDIR /root
+COPY . /app
+WORKDIR /app
 
-COPY ./pom.xml /root
-COPY ./.mvn /root/.mvn
-COPY ./mvnw /root
+RUN chmod +x mvnw
+RUN ./mvnw package -DskipTests
+RUN mv -f target/*.jar taller_app.jar
 
-COPY ./src /root/src
+COPY --from=build /app/taller_app.jar .
 
-RUN ./mvnw clean install -DskipTests
+RUN useradd runtime
+USER runtime
 
-ENTRYPOINT ["java", "-jar", "/root/target/taller_app.jar"]
+ENTRYPOINT ["java", "-jar", "taller_app.jar"]
