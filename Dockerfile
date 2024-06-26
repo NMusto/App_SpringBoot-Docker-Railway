@@ -8,8 +8,6 @@ COPY ./pom.xml /root
 COPY ./.mvn /root/.mvn
 COPY ./mvnw /root
 
-RUN ./mvnw dependeny:go-offline
-
 COPY ./src /root/src
 
 RUN ./mvnw clean install -DskipTests
