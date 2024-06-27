@@ -1,20 +1,20 @@
-FROM openjdk:17-jdk-slim AS build
+FROM maven:3.8.4-openjdk-17 AS build
 
-COPY . /app
 WORKDIR /app
 
-RUN chmod +x mvnw
-RUN ./mvnw package -DskipTests
-RUN mv -f target/*.jar taller_app.jar
+COPY pom.xml .
 
+RUN mvn dependency:go-offline -B
 
-ARG PORT
-ENV PORT=${PORT}
+COPY src ./src
 
-COPY --from=build /app/taller_app.jar .
+RUN mvn clean package -DskipTests
 
-RUN useradd runtime
-USER runtime
+FROM openjdk:17-jdk-alpine
 
-ENTRYPOINT ["java", "-Dserver.port=${PORT}", "-jar", "taller_app.jar"]
+WORKDIR /app
+
+COPY --from=build /app/target/taller_app-0.0.1-SNAPSHOT.jar /app/taller_app.jar
+
+ENTRYPOINT ["java", "-jar", "taller_app.jar"]
 
