@@ -22,6 +22,6 @@ public class Customer {
     private String dni;
     private String phone;
 
-    @OneToMany(targetEntity = Car.class, fetch = FetchType.LAZY, mappedBy = "customer")
-    private List<Car> cars;
+    @OneToMany(targetEntity = Vehicle.class, fetch = FetchType.LAZY, mappedBy = "customer")
+    private List<Vehicle> vehicles;
 }

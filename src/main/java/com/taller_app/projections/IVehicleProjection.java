@@ -1,6 +1,6 @@
 package com.taller_app.projections;
 
-public interface ICarProjection {
+public interface IVehicleProjection {
 
     Long getId();
     String getNumber();

@@ -1,7 +1,7 @@
 package com.taller_app.controllers;
 
 import com.taller_app.dtos.inDTOs.CustomerInDTO;
-import com.taller_app.dtos.outDTOs.CustomerCarsOutDTO;
+import com.taller_app.dtos.outDTOs.CustomerVehiclesOutDTO;
 import com.taller_app.dtos.outDTOs.CustomerOutDTO;
 import com.taller_app.services.CustomerService;
 import org.springframework.http.HttpStatus;
@@ -50,8 +50,8 @@ public class CustomerController {
         return new ResponseEntity<>(customerService.deleteCustomer(customerId), HttpStatus.OK);
     }
 
-    @GetMapping("/findcars/{customerId}")
-    public ResponseEntity<CustomerCarsOutDTO> findCarsByCustomerId(@PathVariable Long customerId) {
-        return new ResponseEntity<>(customerService.findCustomerCars(customerId), HttpStatus.OK);
+    @GetMapping("/findvehicles/{customerId}")
+    public ResponseEntity<CustomerVehiclesOutDTO> findVehiclesByCustomerId (@PathVariable Long customerId) {
+        return new ResponseEntity<>(customerService.findCustomerVehicles(customerId), HttpStatus.OK);
     }
 }

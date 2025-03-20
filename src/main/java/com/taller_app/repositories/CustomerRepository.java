@@ -1,7 +1,7 @@
 package com.taller_app.repositories;
 
 import com.taller_app.entities.Customer;
-import com.taller_app.projections.ICar;
+import com.taller_app.projections.IVehicle;
 import com.taller_app.projections.ICustomerProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,13 +21,13 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
 
     @Modifying
-    @Query(value = "UPDATE car " +
+    @Query(value = "UPDATE vehicle " +
             "SET customer_id = null " +
             "WHERE customer_id = :customerId", nativeQuery = true)
-    public void deleteCustomerInCars(@Param("customerId") Long customerId);
+    public void deleteCustomerInVehicles(@Param("customerId") Long customerId);
 
-    @Query(value = "SELECT c.id, c.number, c.brand " +
-            "FROM car c " +
-            "WHERE c.customer_id = :customerId", nativeQuery = true)
-    public List<ICar> findCarsByCustomerId(Long customerId);
+    @Query(value = "SELECT v.id, v.number, v.brand " +
+            "FROM vehicle v " +
+            "WHERE v.customer_id = :customerId", nativeQuery = true)
+    public List<IVehicle> findVehiclesByCustomerId(Long customerId);
 }

@@ -1,15 +1,15 @@
 package com.taller_app.services;
 
 import com.taller_app.dtos.inDTOs.CustomerInDTO;
-import com.taller_app.dtos.outDTOs.CustomerCarsOutDTO;
+import com.taller_app.dtos.outDTOs.CustomerVehiclesOutDTO;
 import com.taller_app.dtos.outDTOs.CustomerOutDTO;
 import com.taller_app.entities.Customer;
 import com.taller_app.exceptions.GeneralException;
 import com.taller_app.mappers.customerMappers.CustomerInDTOToCustomer;
-import com.taller_app.mappers.customerMappers.CustomerProjectionListToCarOutDTOList;
+import com.taller_app.mappers.customerMappers.CustomerProjectionListToVehicleOutDTOList;
 import com.taller_app.mappers.customerMappers.CustomerProjectionToCustomerOutDTO;
 import com.taller_app.mappers.customerMappers.CustomerToCustomerOutDTO;
-import com.taller_app.projections.ICar;
+import com.taller_app.projections.IVehicle;
 import com.taller_app.projections.ICustomerProjection;
 import com.taller_app.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
@@ -26,17 +26,17 @@ public class CustomerService {
     private final CustomerInDTOToCustomer customerInDTOToCustomer;
     private final CustomerToCustomerOutDTO customerToCustomerOutDTO;
     public final CustomerProjectionToCustomerOutDTO customerProjectionToCustomerOutDTO;
-    private final CustomerProjectionListToCarOutDTOList customerProjectionListToCarOutDTOList;
+    private final CustomerProjectionListToVehicleOutDTOList customerProjectionListToVehicleOutDTOList;
 
     public CustomerService(CustomerRepository customerRepository, CustomerInDTOToCustomer customerInDTOToCustomer,
                            CustomerToCustomerOutDTO customerToCustomerOutDTO,
                            CustomerProjectionToCustomerOutDTO customerProjectionToCustomerOutDTO,
-                           CustomerProjectionListToCarOutDTOList customerProjectionListToCarOutDTOList) {
+                           CustomerProjectionListToVehicleOutDTOList customerProjectionListToVehicleOutDTOList) {
         this.customerRepository = customerRepository;
         this.customerInDTOToCustomer = customerInDTOToCustomer;
         this.customerToCustomerOutDTO = customerToCustomerOutDTO;
         this.customerProjectionToCustomerOutDTO = customerProjectionToCustomerOutDTO;
-        this.customerProjectionListToCarOutDTOList = customerProjectionListToCarOutDTOList;
+        this.customerProjectionListToVehicleOutDTOList = customerProjectionListToVehicleOutDTOList;
     }
 
 
@@ -55,7 +55,7 @@ public class CustomerService {
 
     public List<CustomerOutDTO> findAllCustomers() {
         List<ICustomerProjection> customerProjectionList = customerRepository.findAllProjectedBy();
-        List<CustomerOutDTO> customerOutDTOList = customerProjectionListToCarOutDTOList.map(customerProjectionList);
+        List<CustomerOutDTO> customerOutDTOList = customerProjectionListToVehicleOutDTOList.map(customerProjectionList);
         return customerOutDTOList;
     }
 
@@ -75,27 +75,27 @@ public class CustomerService {
     public String deleteCustomer(Long customerId) {
         this.findCustomer(customerId);
 
-        customerRepository.deleteCustomerInCars(customerId);
+        customerRepository.deleteCustomerInVehicles(customerId);
         customerRepository.deleteById(customerId);
         return "Customer id: " + customerId + " was successfully deleted!";
     }
 
-    public CustomerCarsOutDTO findCustomerCars(Long customerId) {
+    public CustomerVehiclesOutDTO findCustomerVehicles (Long customerId) {
         Customer customer = this.findCustomer(customerId);
-        CustomerCarsOutDTO customerCarsOutDTO = new CustomerCarsOutDTO();
+        CustomerVehiclesOutDTO customerVehiclesOutDTO = new CustomerVehiclesOutDTO();
 
-        customerCarsOutDTO.setId(customer.getId());
-        customerCarsOutDTO.setName(customer.getName());
-        customerCarsOutDTO.setLastName(customer.getLastName());
-        customerCarsOutDTO.setPhone(customer.getPhone());
+        customerVehiclesOutDTO.setId(customer.getId());
+        customerVehiclesOutDTO.setName(customer.getName());
+        customerVehiclesOutDTO.setLastName(customer.getLastName());
+        customerVehiclesOutDTO.setPhone(customer.getPhone());
 
-        List<ICar> cars = customerRepository.findCarsByCustomerId(customerId);
-        if(cars.isEmpty()) {
-            throw new GeneralException("There are no cars for Customer id: " + customerId, HttpStatus.NOT_FOUND);
+        List<IVehicle> vehicles = customerRepository.findVehiclesByCustomerId(customerId);
+        if(vehicles.isEmpty()) {
+            throw new GeneralException("There are no vehicles for Customer id: " + customerId, HttpStatus.NOT_FOUND);
         }
-        customerCarsOutDTO.setCars(cars);
+        customerVehiclesOutDTO.setVehicles(vehicles);
 
-        return customerCarsOutDTO;
+        return customerVehiclesOutDTO;
     }
 
 

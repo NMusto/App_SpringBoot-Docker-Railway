@@ -9,15 +9,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-//  Mapping CustomerProjectionList To CarOutDTOList with a custom mapper (IMapper)
+//  Mapping CustomerProjectionList To VehicleOutDTOList with a custom mapper (IMapper)
 
 
 @Component
-public class CustomerProjectionListToCarOutDTOList implements IMapper<List<ICustomerProjection>, List<CustomerOutDTO>> {
+public class CustomerProjectionListToVehicleOutDTOList implements IMapper<List<ICustomerProjection>, List<CustomerOutDTO>> {
 
     private final CustomerProjectionToCustomerOutDTO customerProjectionToCustomerOutDTO;
 
-    public CustomerProjectionListToCarOutDTOList(CustomerProjectionToCustomerOutDTO customerProjectionToCustomerOutDTO) {
+    public CustomerProjectionListToVehicleOutDTOList(CustomerProjectionToCustomerOutDTO customerProjectionToCustomerOutDTO) {
         this.customerProjectionToCustomerOutDTO = customerProjectionToCustomerOutDTO;
     }
 
