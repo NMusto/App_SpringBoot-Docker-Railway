@@ -3,9 +3,10 @@ package com.taller_app.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -24,4 +25,7 @@ public class Customer {
 
     @OneToMany(targetEntity = Vehicle.class, fetch = FetchType.LAZY, mappedBy = "customer")
     private List<Vehicle> vehicles;
+
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    List<RepairOrder> orders = new ArrayList<>();
 }

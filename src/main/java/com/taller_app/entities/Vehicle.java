@@ -20,5 +20,8 @@ public class Vehicle {
 
     @ManyToOne(targetEntity = Customer.class)
     private Customer customer;
+
+    @OneToOne(mappedBy = "vehicle")
+    RepairOrder order;
 }
 

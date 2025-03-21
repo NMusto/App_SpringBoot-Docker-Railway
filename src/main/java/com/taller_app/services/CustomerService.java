@@ -112,6 +112,7 @@ public class CustomerService implements ICustomerService{
 
     // Adds a vehicle to a customer
     @Override
+    @Transactional
     public String addVehicleToCustomer(Long customerId, VehicleInDTO vehicleInDTO) {
 
         Customer customer = this.findCustomer(customerId);
