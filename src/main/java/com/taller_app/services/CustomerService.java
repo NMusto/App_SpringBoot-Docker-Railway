@@ -1,9 +1,11 @@
 package com.taller_app.services;
 
 import com.taller_app.dtos.inDTOs.CustomerInDTO;
+import com.taller_app.dtos.inDTOs.VehicleInDTO;
 import com.taller_app.dtos.outDTOs.CustomerVehiclesOutDTO;
 import com.taller_app.dtos.outDTOs.CustomerOutDTO;
 import com.taller_app.entities.Customer;
+import com.taller_app.entities.Vehicle;
 import com.taller_app.exceptions.GeneralException;
 import com.taller_app.mappers.customerMappers.CustomerInDTOToCustomer;
 import com.taller_app.mappers.customerMappers.CustomerProjectionListToVehicleOutDTOList;
@@ -20,26 +22,29 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CustomerService {
+public class CustomerService implements ICustomerService{
 
     private final CustomerRepository customerRepository;
     private final CustomerInDTOToCustomer customerInDTOToCustomer;
     private final CustomerToCustomerOutDTO customerToCustomerOutDTO;
     public final CustomerProjectionToCustomerOutDTO customerProjectionToCustomerOutDTO;
     private final CustomerProjectionListToVehicleOutDTOList customerProjectionListToVehicleOutDTOList;
+    private final IVehicleService vehicleService;
 
     public CustomerService(CustomerRepository customerRepository, CustomerInDTOToCustomer customerInDTOToCustomer,
                            CustomerToCustomerOutDTO customerToCustomerOutDTO,
                            CustomerProjectionToCustomerOutDTO customerProjectionToCustomerOutDTO,
-                           CustomerProjectionListToVehicleOutDTOList customerProjectionListToVehicleOutDTOList) {
+                           CustomerProjectionListToVehicleOutDTOList customerProjectionListToVehicleOutDTOList, ICustomerService customerService, IVehicleService vehicleService) {
         this.customerRepository = customerRepository;
         this.customerInDTOToCustomer = customerInDTOToCustomer;
         this.customerToCustomerOutDTO = customerToCustomerOutDTO;
         this.customerProjectionToCustomerOutDTO = customerProjectionToCustomerOutDTO;
         this.customerProjectionListToVehicleOutDTOList = customerProjectionListToVehicleOutDTOList;
+        this.vehicleService = vehicleService;
     }
 
 
+    @Override
     public CustomerOutDTO createCustomer(CustomerInDTO customerInDTO) {
         Customer customer = customerInDTOToCustomer.map(customerInDTO);
         customerRepository.save(customer);
@@ -47,18 +52,21 @@ public class CustomerService {
         return customerOutDTO;
     }
 
+    @Override
     public CustomerOutDTO findCustomerById (Long customerId) {
         ICustomerProjection iCustomerProjection = this.findCustomerProjection(customerId);
         CustomerOutDTO customerOutDTO = customerProjectionToCustomerOutDTO.map(iCustomerProjection);
         return customerOutDTO;
     }
 
+    @Override
     public List<CustomerOutDTO> findAllCustomers() {
         List<ICustomerProjection> customerProjectionList = customerRepository.findAllProjectedBy();
         List<CustomerOutDTO> customerOutDTOList = customerProjectionListToVehicleOutDTOList.map(customerProjectionList);
         return customerOutDTOList;
     }
 
+    @Override
     public CustomerOutDTO updateCustomer (Long customerId, CustomerInDTO customerInDTO) {
         Customer customer = this.findCustomer(customerId);
 
@@ -71,6 +79,7 @@ public class CustomerService {
         return customerToCustomerOutDTO.map(customer);
     }
 
+    @Override
     @Transactional
     public String deleteCustomer(Long customerId) {
         this.findCustomer(customerId);
@@ -80,6 +89,9 @@ public class CustomerService {
         return "Customer id: " + customerId + " was successfully deleted!";
     }
 
+
+    // Retrieves all vehicles of a customer
+    @Override
     public CustomerVehiclesOutDTO findCustomerVehicles (Long customerId) {
         Customer customer = this.findCustomer(customerId);
         CustomerVehiclesOutDTO customerVehiclesOutDTO = new CustomerVehiclesOutDTO();
@@ -97,6 +109,21 @@ public class CustomerService {
 
         return customerVehiclesOutDTO;
     }
+
+    // Adds a vehicle to a customer
+    @Override
+    public String addVehicleToCustomer(Long customerId, VehicleInDTO vehicleInDTO) {
+
+        Customer customer = this.findCustomer(customerId);
+
+        Vehicle vehicle = vehicleService.create(vehicleInDTO);
+
+        vehicleService.addCustomerToVehicle(vehicle.getId(), customerId);
+
+        return "Vehicle successfully created!";
+    }
+
+
 
 
     /*------------------------------------------------------------------------------------------------*/

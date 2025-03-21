@@ -1,9 +1,11 @@
 package com.taller_app.controllers;
 
 import com.taller_app.dtos.inDTOs.CustomerInDTO;
+import com.taller_app.dtos.inDTOs.VehicleInDTO;
 import com.taller_app.dtos.outDTOs.CustomerVehiclesOutDTO;
 import com.taller_app.dtos.outDTOs.CustomerOutDTO;
 import com.taller_app.services.CustomerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
+
 
     private final CustomerService customerService;
 
@@ -50,8 +53,16 @@ public class CustomerController {
         return new ResponseEntity<>(customerService.deleteCustomer(customerId), HttpStatus.OK);
     }
 
+    // Retrieves all vehicles of a customer
     @GetMapping("/findvehicles/{customerId}")
     public ResponseEntity<CustomerVehiclesOutDTO> findVehiclesByCustomerId (@PathVariable Long customerId) {
         return new ResponseEntity<>(customerService.findCustomerVehicles(customerId), HttpStatus.OK);
     }
+
+    //Adds a vehicle to a customer
+    @PostMapping("/addvehicle/{customerId}")
+    public ResponseEntity<String> addVehicleToCustomer (@PathVariable Long customerId, @RequestBody VehicleInDTO vehicleInDTO) {
+        return ResponseEntity.ok().body(customerService.addVehicleToCustomer(customerId, vehicleInDTO));
+    }
+
 }

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class VehicleService {
+public class VehicleService implements IVehicleService{
 
     private final VehicleRepository vehicleRepository;
     private final VehicleInDTOToVehicle vehicleInDTOToVehicle;
@@ -39,26 +39,35 @@ public class VehicleService {
     }
 
 
-
-    public VehicleOutDTO createVehicle(VehicleInDTO vehicleInDTO) {
+    @Override
+    public VehicleOutDTO createVehicle (VehicleInDTO vehicleInDTO) {
         Vehicle vehicle = vehicleInDTOToVehicle.map(vehicleInDTO);
         vehicleRepository.save(vehicle);
         VehicleOutDTO vehicleOutDTO = vehicleToVehicleOutDTO.map(vehicle);
         return vehicleOutDTO;
     }
 
+    @Override
+    public Vehicle create (VehicleInDTO vehicleInDTO) {
+        Vehicle vehicle = vehicleInDTOToVehicle.map(vehicleInDTO);
+        return vehicleRepository.save(vehicle);
+    }
+
+    @Override
     public VehicleOutDTO findVehicleById (Long vehicleId) {
         IVehicleProjection iVehicleProjection = this.findVehicleProjection(vehicleId);
         VehicleOutDTO vehicleOutDTO = vehicleProjectionToVehicleOutDTO.map(iVehicleProjection);
         return vehicleOutDTO;
     }
 
+    @Override
     public List<VehicleOutDTO> findAllVehicles() {
         List<IVehicleProjection> vehicleProjectionList = vehicleRepository.findAllProjectedBy();
         List<VehicleOutDTO> vehicleOutDTOList = vehicleProjectionListToVehicleOutDTOList.map(vehicleProjectionList);
         return vehicleOutDTOList;
     }
 
+    @Override
     public VehicleOutDTO updateVehicle (Long vehicleId, VehicleInDTO vehicleInDTO) {
         Vehicle vehicle = this.findVehicle(vehicleId);
 
@@ -69,6 +78,7 @@ public class VehicleService {
         return vehicleToVehicleOutDTO.map(vehicle);
     }
 
+    @Override
     public String deleteVehicle (Long vehicleId) {
         Vehicle vehicle = this.findVehicle(vehicleId);
 
@@ -76,6 +86,7 @@ public class VehicleService {
         return "Vehicle id: " + vehicleId + " was successfully deleted!";
     }
 
+    @Override
     public String addCustomerToVehicle (Long vehicleId, Long customerId) {
         Vehicle vehicle = this.findVehicle(vehicleId);
         Customer customer = customerService.findCustomer(customerId);
@@ -85,6 +96,7 @@ public class VehicleService {
         return "Customer id " + customerId + " was successfully added to Vehicle id " + vehicleId;
     }
 
+    @Override
     public String deleteCustomerByVehicleId(Long vehicleId) {
         Vehicle vehicle = this.findVehicle(vehicleId);
 
