@@ -5,4 +5,6 @@ public interface IVehicle {
     Long getId();
     String getNumber();
     String getBrand();
+
+    Long repairOrderId();
 }

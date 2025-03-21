@@ -22,6 +22,6 @@ public class Vehicle {
     private Customer customer;
 
     @OneToOne(mappedBy = "vehicle")
-    RepairOrder order;
+    RepairOrder repairOrder;
 }
 

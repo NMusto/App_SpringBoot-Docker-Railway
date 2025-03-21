@@ -11,4 +11,6 @@ public interface IVehicleProjection {
     String getCustomerLastName();
     String getCustomerDni();
     String getCustomerPhone();
+
+    Long getRepairOrderId();
 }

@@ -20,4 +20,6 @@ public class VehicleOutDTO {
     private String customerLastName;
     private String customerDni;
     private String customerPhone;
+
+    private Long repairOrderId;
 }

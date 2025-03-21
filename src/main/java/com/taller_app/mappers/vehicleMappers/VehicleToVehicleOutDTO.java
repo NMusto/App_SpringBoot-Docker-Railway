@@ -23,6 +23,7 @@ public class VehicleToVehicleOutDTO implements IMapper<Vehicle, VehicleOutDTO> {
                 .customerLastName( vehicle.getCustomer() != null ? vehicle.getCustomer().getLastName() : null )
                 .customerDni( vehicle.getCustomer() != null ? vehicle.getCustomer().getDni() : null )
                 .customerPhone( vehicle.getCustomer() != null ? vehicle.getCustomer().getPhone() : null )
+                .repairOrderId(vehicle.getRepairOrder().getId())
                 .build();
 
         return vehicleOutDTO;

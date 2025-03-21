@@ -24,6 +24,7 @@ public class VehicleProjectionToVehicleOutDTO implements IMapper<IVehicleProject
         vehicleOutDTO.setCustomerLastName(iVehicleProjection.getCustomerLastName());
         vehicleOutDTO.setCustomerDni(iVehicleProjection.getCustomerDni());
         vehicleOutDTO.setCustomerPhone(iVehicleProjection.getCustomerPhone());
+        vehicleOutDTO.setRepairOrderId(iVehicleProjection.getRepairOrderId());
 
         return vehicleOutDTO;
     }
