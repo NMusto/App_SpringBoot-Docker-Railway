@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.List;
 
 @Repository
-public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
+public interface IVehicleRepository extends JpaRepository<Vehicle, Long> {
 
     public List<IVehicleProjection> findAllProjectedBy();
 

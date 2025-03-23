@@ -10,7 +10,7 @@ import com.taller_app.mappers.vehicleMappers.VehicleProjectionListToVehicleOutDT
 import com.taller_app.mappers.vehicleMappers.VehicleProjectionToVehicleOutDTO;
 import com.taller_app.mappers.vehicleMappers.VehicleToVehicleOutDTO;
 import com.taller_app.projections.IVehicleProjection;
-import com.taller_app.repositories.VehicleRepository;
+import com.taller_app.repositories.IVehicleRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +20,20 @@ import java.util.Optional;
 @Service
 public class VehicleService implements IVehicleService{
 
-    private final VehicleRepository vehicleRepository;
+    private final IVehicleRepository IVehicleRepository;
     private final VehicleInDTOToVehicle vehicleInDTOToVehicle;
     private final CustomerService customerService;
     private final VehicleProjectionToVehicleOutDTO vehicleProjectionToVehicleOutDTO;
     private final VehicleToVehicleOutDTO vehicleToVehicleOutDTO;
     private final VehicleProjectionListToVehicleOutDTOList vehicleProjectionListToVehicleOutDTOList;
 
-    public VehicleService(VehicleRepository vehicleRepository, VehicleInDTOToVehicle vehicleInDTOToVehicle, CustomerService customerService,
-                          VehicleProjectionToVehicleOutDTO vehicleProjectionToVehicleOutDTO, VehicleToVehicleOutDTO vehicleToVehicleOutDTO,
+    public VehicleService(IVehicleRepository IVehicleRepository,
+                          VehicleInDTOToVehicle vehicleInDTOToVehicle,
+                          CustomerService customerService,
+                          VehicleProjectionToVehicleOutDTO vehicleProjectionToVehicleOutDTO,
+                          VehicleToVehicleOutDTO vehicleToVehicleOutDTO,
                           VehicleProjectionListToVehicleOutDTOList vehicleProjectionListToVehicleOutDTOList) {
-        this.vehicleRepository = vehicleRepository;
+        this.IVehicleRepository = IVehicleRepository;
         this.vehicleInDTOToVehicle = vehicleInDTOToVehicle;
         this.customerService = customerService;
         this.vehicleProjectionToVehicleOutDTO = vehicleProjectionToVehicleOutDTO;
@@ -42,7 +45,7 @@ public class VehicleService implements IVehicleService{
     @Override
     public VehicleOutDTO createVehicle (VehicleInDTO vehicleInDTO) {
         Vehicle vehicle = vehicleInDTOToVehicle.map(vehicleInDTO);
-        vehicleRepository.save(vehicle);
+        IVehicleRepository.save(vehicle);
         VehicleOutDTO vehicleOutDTO = vehicleToVehicleOutDTO.map(vehicle);
         return vehicleOutDTO;
     }
@@ -50,7 +53,7 @@ public class VehicleService implements IVehicleService{
     @Override
     public Vehicle create (VehicleInDTO vehicleInDTO) {
         Vehicle vehicle = vehicleInDTOToVehicle.map(vehicleInDTO);
-        return vehicleRepository.save(vehicle);
+        return IVehicleRepository.save(vehicle);
     }
 
     @Override
@@ -62,7 +65,7 @@ public class VehicleService implements IVehicleService{
 
     @Override
     public List<VehicleOutDTO> findAllVehicles() {
-        List<IVehicleProjection> vehicleProjectionList = vehicleRepository.findAllProjectedBy();
+        List<IVehicleProjection> vehicleProjectionList = IVehicleRepository.findAllProjectedBy();
         List<VehicleOutDTO> vehicleOutDTOList = vehicleProjectionListToVehicleOutDTOList.map(vehicleProjectionList);
         return vehicleOutDTOList;
     }
@@ -74,7 +77,7 @@ public class VehicleService implements IVehicleService{
         vehicle.setNumber(vehicleInDTO.getNumber());
         vehicle.setBrand(vehicleInDTO.getBrand());
 
-        vehicleRepository.save(vehicle);
+        IVehicleRepository.save(vehicle);
         return vehicleToVehicleOutDTO.map(vehicle);
     }
 
@@ -82,7 +85,7 @@ public class VehicleService implements IVehicleService{
     public String deleteVehicle (Long vehicleId) {
         Vehicle vehicle = this.findVehicle(vehicleId);
 
-        vehicleRepository.delete(vehicle);
+        IVehicleRepository.delete(vehicle);
         return "Vehicle id: " + vehicleId + " was successfully deleted!";
     }
 
@@ -92,7 +95,7 @@ public class VehicleService implements IVehicleService{
         Customer customer = customerService.findCustomer(customerId);
 
         vehicle.setCustomer(customer);
-        vehicleRepository.save(vehicle);
+        IVehicleRepository.save(vehicle);
         return "Customer id " + customerId + " was successfully added to Vehicle id " + vehicleId;
     }
 
@@ -101,7 +104,7 @@ public class VehicleService implements IVehicleService{
         Vehicle vehicle = this.findVehicle(vehicleId);
 
         vehicle.setCustomer(null);
-        vehicleRepository.save(vehicle);
+        IVehicleRepository.save(vehicle);
         return "Customer was successfully deleted from Vehicle id " + vehicleId;
     }
 
@@ -114,7 +117,7 @@ public class VehicleService implements IVehicleService{
 
 
     public Vehicle findVehicle (Long vehicleId) {
-        Optional<Vehicle> optionalVehicle = vehicleRepository.findById(vehicleId);
+        Optional<Vehicle> optionalVehicle = IVehicleRepository.findById(vehicleId);
         if(optionalVehicle.isEmpty()) {
             throw new GeneralException("VehicleId does not exist.", HttpStatus.NOT_FOUND);
         }
@@ -122,7 +125,7 @@ public class VehicleService implements IVehicleService{
     }
 
     public IVehicleProjection findVehicleProjection (Long vehicleId) {
-        Optional<IVehicleProjection> optionalVehicleProjection = vehicleRepository.findVehicleById(vehicleId);
+        Optional<IVehicleProjection> optionalVehicleProjection = IVehicleRepository.findVehicleById(vehicleId);
         if(optionalVehicleProjection.isEmpty()) {
             throw new GeneralException("VehicleId does not exist.", HttpStatus.NOT_FOUND);
         }

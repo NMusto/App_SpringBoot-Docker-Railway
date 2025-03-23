@@ -1,11 +1,9 @@
 package com.taller_app.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -19,6 +17,7 @@ public class Vehicle {
     private String brand;
 
     @ManyToOne(targetEntity = Customer.class)
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @OneToOne(mappedBy = "vehicle")

@@ -14,5 +14,4 @@ public interface ICustomerService {
     CustomerOutDTO updateCustomer (Long customerId, CustomerInDTO customerInDTO);
     String deleteCustomer(Long customerId);
     CustomerVehiclesOutDTO findCustomerVehicles (Long customerId);
-    String addVehicleToCustomer(Long customerId, VehicleInDTO vehicleInDTO);
 }

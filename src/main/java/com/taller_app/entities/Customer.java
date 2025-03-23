@@ -26,6 +26,6 @@ public class Customer {
     @OneToMany(targetEntity = Vehicle.class, fetch = FetchType.LAZY, mappedBy = "customer")
     private List<Vehicle> vehicles;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-    List<RepairOrder> orders = new ArrayList<>();
+    @OneToMany(targetEntity = RepairOrder.class, mappedBy = "customer", fetch = FetchType.LAZY)
+    List<RepairOrder> orders;
 }

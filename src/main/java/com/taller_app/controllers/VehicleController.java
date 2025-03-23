@@ -2,7 +2,7 @@ package com.taller_app.controllers;
 
 import com.taller_app.dtos.inDTOs.VehicleInDTO;
 import com.taller_app.dtos.outDTOs.VehicleOutDTO;
-import com.taller_app.services.VehicleService;
+import com.taller_app.services.IVehicleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +14,9 @@ import java.util.List;
 public class VehicleController {
 
 
-    private final VehicleService vehicleService;
+    private final IVehicleService vehicleService;
 
-    public VehicleController(VehicleService vehicleService) {
+    public VehicleController(IVehicleService vehicleService) {
         this.vehicleService = vehicleService;
     }
 
