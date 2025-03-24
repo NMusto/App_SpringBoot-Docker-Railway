@@ -22,18 +22,18 @@ import java.util.Optional;
 @Service
 public class CustomerService implements ICustomerService{
 
-    private final ICustomerRepository ICustomerRepository;
+    private final ICustomerRepository customerRepository;
     private final CustomerInDTOToCustomer customerInDTOToCustomer;
     private final CustomerToCustomerOutDTO customerToCustomerOutDTO;
     public final CustomerProjectionToCustomerOutDTO customerProjectionToCustomerOutDTO;
     private final CustomerProjectionListToVehicleOutDTOList customerProjectionListToVehicleOutDTOList;
 
-    public CustomerService(ICustomerRepository ICustomerRepository,
+    public CustomerService(ICustomerRepository customerRepository,
                            CustomerInDTOToCustomer customerInDTOToCustomer,
                            CustomerToCustomerOutDTO customerToCustomerOutDTO,
                            CustomerProjectionToCustomerOutDTO customerProjectionToCustomerOutDTO,
                            CustomerProjectionListToVehicleOutDTOList customerProjectionListToVehicleOutDTOList) {
-        this.ICustomerRepository = ICustomerRepository;
+        this.customerRepository = customerRepository;
         this.customerInDTOToCustomer = customerInDTOToCustomer;
         this.customerToCustomerOutDTO = customerToCustomerOutDTO;
         this.customerProjectionToCustomerOutDTO = customerProjectionToCustomerOutDTO;
@@ -44,7 +44,7 @@ public class CustomerService implements ICustomerService{
     @Override
     public CustomerOutDTO createCustomer(CustomerInDTO customerInDTO) {
         Customer customer = customerInDTOToCustomer.map(customerInDTO);
-        ICustomerRepository.save(customer);
+        customerRepository.save(customer);
         CustomerOutDTO customerOutDTO = customerToCustomerOutDTO.map(customer);
         return customerOutDTO;
     }
@@ -58,7 +58,7 @@ public class CustomerService implements ICustomerService{
 
     @Override
     public List<CustomerOutDTO> findAllCustomers() {
-        List<ICustomerProjection> customerProjectionList = ICustomerRepository.findAllProjectedBy();
+        List<ICustomerProjection> customerProjectionList = customerRepository.findAllProjectedBy();
         List<CustomerOutDTO> customerOutDTOList = customerProjectionListToVehicleOutDTOList.map(customerProjectionList);
         return customerOutDTOList;
     }
@@ -72,7 +72,7 @@ public class CustomerService implements ICustomerService{
         customer.setLastName(customerInDTO.getLastName());
         customer.setPhone(customerInDTO.getPhone());
 
-        ICustomerRepository.save(customer);
+        customerRepository.save(customer);
         return customerToCustomerOutDTO.map(customer);
     }
 
@@ -81,8 +81,8 @@ public class CustomerService implements ICustomerService{
     public String deleteCustomer(Long customerId) {
         this.findCustomer(customerId);
 
-        ICustomerRepository.deleteCustomerInVehicles(customerId);
-        ICustomerRepository.deleteById(customerId);
+        customerRepository.deleteCustomerInVehicles(customerId);
+        customerRepository.deleteById(customerId);
         return "Customer id: " + customerId + " was successfully deleted!";
     }
 
@@ -98,7 +98,7 @@ public class CustomerService implements ICustomerService{
         customerVehiclesOutDTO.setLastName(customer.getLastName());
         customerVehiclesOutDTO.setPhone(customer.getPhone());
 
-        List<IVehicle> vehicles = ICustomerRepository.findVehiclesByCustomerId(customerId);
+        List<IVehicle> vehicles = customerRepository.findVehiclesByCustomerId(customerId);
         if(vehicles.isEmpty()) {
             throw new GeneralException("There are no vehicles for Customer id: " + customerId, HttpStatus.NOT_FOUND);
         }
@@ -111,21 +111,21 @@ public class CustomerService implements ICustomerService{
 
 
     /*------------------------------------------------------------------------------------------------*/
-    /*                                    CUSTOMER: UTIlS                                                  */
+    /*                                    CUSTOMER: UTIlS                                             */
     /*------------------------------------------------------------------------------------------------*/
 
     @Override
-    public Customer findCustomer (Long customerId) {
-        Optional<Customer> optionalCustomer = ICustomerRepository.findById(customerId);
-        if(optionalCustomer.isEmpty()) {
+    public Customer findCustomer(Long customerId) {
+        Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
+        if (optionalCustomer.isEmpty()) {
             throw new GeneralException("CustomerId does not exist.", HttpStatus.NOT_FOUND);
         }
         return optionalCustomer.get();
     }
 
-    public ICustomerProjection findCustomerProjection (Long customerId) {
-        Optional<ICustomerProjection> optionalCustomerProjection = ICustomerRepository.findCustomerById(customerId);
-        if(optionalCustomerProjection.isEmpty()) {
+    public ICustomerProjection findCustomerProjection(Long customerId) {
+        Optional<ICustomerProjection> optionalCustomerProjection = customerRepository.findCustomerById(customerId);
+        if (optionalCustomerProjection.isEmpty()) {
             throw new GeneralException("CustomerId does not exist.", HttpStatus.NOT_FOUND);
         }
         return optionalCustomerProjection.get();
