@@ -10,6 +10,7 @@ public interface IVehicleService {
     VehicleOutDTO createVehicle(VehicleInDTO vehicleInDTO);
     Vehicle create(VehicleInDTO vehicleInDTO);
     VehicleOutDTO findVehicleById (Long vehicleId);
+    Vehicle findVehicle (Long vehicleId);
     List<VehicleOutDTO> findAllVehicles();
     VehicleOutDTO updateVehicle (Long vehicleId, VehicleInDTO vehicleInDTO);
     String deleteVehicle (Long vehicleId);

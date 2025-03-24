@@ -6,7 +6,7 @@ import com.taller_app.projections.ICustomerProjection;
 import org.springframework.stereotype.Component;
 
 
-//  Mapping CustomerProjection to CustomerOutDTO with a custom mapper (IMapper)
+//  Mapping CustomerProjection to CustomerOutDTO with a custom mapper (IMapper) and Builder Pattern
 
 @Component
 public class CustomerProjectionToCustomerOutDTO implements IMapper<ICustomerProjection, CustomerOutDTO> {
@@ -14,13 +14,13 @@ public class CustomerProjectionToCustomerOutDTO implements IMapper<ICustomerProj
     @Override
     public CustomerOutDTO map(ICustomerProjection iCustomerProjection) {
 
-        CustomerOutDTO customerOutDTO = new CustomerOutDTO();
-
-        customerOutDTO.setId(iCustomerProjection.getId());
-        customerOutDTO.setName(iCustomerProjection.getName());
-        customerOutDTO.setLastName(iCustomerProjection.getLastName());
-        customerOutDTO.setDni(iCustomerProjection.getDni());
-        customerOutDTO.setPhone(iCustomerProjection.getPhone());
+        CustomerOutDTO customerOutDTO = CustomerOutDTO.builder()
+                .id(iCustomerProjection.getId())
+                .name(iCustomerProjection.getName())
+                .lastName(iCustomerProjection.getLastName())
+                .dni(iCustomerProjection.getDni())
+                .phone(iCustomerProjection.getPhone())
+                .build();
 
         return customerOutDTO;
     }

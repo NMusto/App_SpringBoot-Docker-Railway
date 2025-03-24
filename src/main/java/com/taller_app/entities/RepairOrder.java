@@ -1,10 +1,7 @@
 package com.taller_app.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -12,13 +9,13 @@ import java.util.Map;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 public class RepairOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double totalCost;
     private boolean repairCompleted;
 
     @ManyToOne(targetEntity = Customer.class)

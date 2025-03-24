@@ -2,26 +2,22 @@ package com.taller_app.mappers.customerMappers;
 
 import com.taller_app.dtos.outDTOs.CustomerOutDTO;
 import com.taller_app.entities.Customer;
-import com.taller_app.mappers.IMapper;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 
-//  Mapping Customer To CustomerOutDTO with a custom mapper and Builder Pattern
+//  Mapping Customer to CustomerOutDTO with ModelMapper
 
 @Component
-public class CustomerToCustomerOutDTO implements IMapper<Customer, CustomerOutDTO> {
+public class CustomerToCustomerOutDTO {
 
-    @Override
+   private ModelMapper modelMapper;
+
+   public CustomerToCustomerOutDTO(ModelMapper modelMapper) {
+       this.modelMapper = modelMapper;
+   }
+
     public CustomerOutDTO map(Customer customer) {
-
-        CustomerOutDTO customerOutDTO = CustomerOutDTO.builder()
-                .id(customer.getId())
-                .name(customer.getName())
-                .lastName(customer.getLastName())
-                .dni(customer.getDni())
-                .phone(customer.getPhone())
-                .build();
-
-        return customerOutDTO;
+       return modelMapper.map(customer, CustomerOutDTO.class);
     }
 }

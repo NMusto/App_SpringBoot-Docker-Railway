@@ -115,7 +115,7 @@ public class VehicleService implements IVehicleService{
     /*                                    VEHICLE: UTIlS                                                  */
     /*------------------------------------------------------------------------------------------------*/
 
-
+    @Override
     public Vehicle findVehicle (Long vehicleId) {
         Optional<Vehicle> optionalVehicle = IVehicleRepository.findById(vehicleId);
         if(optionalVehicle.isEmpty()) {
