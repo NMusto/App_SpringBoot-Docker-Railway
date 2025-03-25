@@ -16,6 +16,7 @@ public class RepairOrderOutDTO {
     private Long id;
     private LocalDate date;
     private Map<String, Double> repairs;
+    private Double totalCost;
 
     private Long customerId;
     private String customerName;

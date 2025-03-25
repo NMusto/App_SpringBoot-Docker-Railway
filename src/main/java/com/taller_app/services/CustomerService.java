@@ -78,8 +78,7 @@ public class CustomerService implements ICustomerService{
 
     @Override
     @Transactional
-    public String deleteCustomer(Long customerId) {
-        this.findCustomer(customerId);
+    public String deleteCustomer(Long customerId) {this.findCustomer(customerId);
 
         customerRepository.deleteCustomerInVehicles(customerId);
         customerRepository.deleteById(customerId);
@@ -116,11 +115,8 @@ public class CustomerService implements ICustomerService{
 
     @Override
     public Customer findCustomer(Long customerId) {
-        Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
-        if (optionalCustomer.isEmpty()) {
-            throw new GeneralException("CustomerId does not exist.", HttpStatus.NOT_FOUND);
-        }
-        return optionalCustomer.get();
+        return customerRepository.findById(customerId)
+                .orElseThrow(() -> new GeneralException("CustomerId does not exist.", HttpStatus.NOT_FOUND));
     }
 
     public ICustomerProjection findCustomerProjection(Long customerId) {

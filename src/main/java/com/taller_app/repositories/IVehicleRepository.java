@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface IVehicleRepository extends JpaRepository<Vehicle, Long> {
 
-    public List<IVehicleProjection> findAllProjectedBy();
+    List<IVehicleProjection> findAllProjectedBy();
 
-    public Optional<IVehicleProjection> findVehicleById(Long vehicleId);
+    Optional<IVehicleProjection> findVehicleById(Long vehicleId);
 }

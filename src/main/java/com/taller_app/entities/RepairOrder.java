@@ -17,6 +17,7 @@ public class RepairOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private boolean repairCompleted;
+    private Double totalCost;
 
     @ManyToOne(targetEntity = Customer.class)
     @JoinColumn(name = "customer_id")

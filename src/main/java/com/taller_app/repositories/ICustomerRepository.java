@@ -15,9 +15,9 @@ import java.util.Optional;
 @Repository
 public interface ICustomerRepository extends JpaRepository<Customer, Long> {
 
-    public List<ICustomerProjection> findAllProjectedBy();
+    List<ICustomerProjection> findAllProjectedBy();
 
-    public Optional<ICustomerProjection> findCustomerById(Long customerId);
+    Optional<ICustomerProjection> findCustomerById(Long customerId);
 
 
     @Modifying

@@ -9,7 +9,7 @@ public interface IRepairOrderService {
     RepairOrderOutDTO createRepairOrder(RepairOrderInDTO repairOrderInDTO);
     RepairOrderOutDTO findRepairOrderById (Long repairOrderId);
     List<RepairOrderOutDTO> findAllRepairOrders();
-    RepairOrderOutDTO updateRepairOrder (Long repairOrderId, RepairOrderInDTO repairOrderInDTO);
+    String updateRepairOrder (Long repairOrderId, RepairOrderInDTO repairOrderInDTO);
     String deleteRepairOrder (Long repairOrderId);
 
     // asignar una reparación a la orden, detalle y costo

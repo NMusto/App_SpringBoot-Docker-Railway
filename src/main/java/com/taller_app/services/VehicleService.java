@@ -117,11 +117,8 @@ public class VehicleService implements IVehicleService{
 
     @Override
     public Vehicle findVehicle (Long vehicleId) {
-        Optional<Vehicle> optionalVehicle = IVehicleRepository.findById(vehicleId);
-        if(optionalVehicle.isEmpty()) {
-            throw new GeneralException("VehicleId does not exist.", HttpStatus.NOT_FOUND);
-        }
-        return optionalVehicle.get();
+        return IVehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new GeneralException("VehicleId does not exist.", HttpStatus.NOT_FOUND));
     }
 
     public IVehicleProjection findVehicleProjection (Long vehicleId) {

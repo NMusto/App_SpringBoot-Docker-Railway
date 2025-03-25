@@ -6,6 +6,7 @@ import com.taller_app.entities.Customer;
 import com.taller_app.entities.RepairOrder;
 import com.taller_app.entities.Vehicle;
 import com.taller_app.exceptions.GeneralException;
+import com.taller_app.mappers.repairOrderMappers.RepairOrderProjectionListToRepairProjectionOutDTOList;
 import com.taller_app.mappers.repairOrderMappers.RepairOrderProjectionToRepairOrderOutDTO;
 import com.taller_app.mappers.repairOrderMappers.RepairOrderToRepairOrderOutDTO;
 import com.taller_app.projections.ICustomerProjection;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -26,16 +28,19 @@ public class RepairOrderService implements IRepairOrderService{
     private final ICustomerService customerService;
     private final RepairOrderToRepairOrderOutDTO repairOrderToRepairOrderOutDTO;
     private final RepairOrderProjectionToRepairOrderOutDTO repairOrderProjectionToRepairOrderOutDTO;
+    private final RepairOrderProjectionListToRepairProjectionOutDTOList repairOrderProjectionListToRepairProjectionOutDTOList;
 
     public RepairOrderService (IRepairOrderRepository orderRepository,
                                IVehicleService vehicleService,
                                ICustomerService customerService,
-                               RepairOrderToRepairOrderOutDTO repairOrderToRepairOrderOutDTO, RepairOrderProjectionToRepairOrderOutDTO repairOrderProjectionToRepairOrderOutDTO) {
+                               RepairOrderToRepairOrderOutDTO repairOrderToRepairOrderOutDTO,
+                               RepairOrderProjectionToRepairOrderOutDTO repairOrderProjectionToRepairOrderOutDTO, RepairOrderProjectionListToRepairProjectionOutDTOList repairOrderProjectionListToRepairProjectionOutDTOList) {
         this.repairOrderRepository = orderRepository;
         this.vehicleService = vehicleService;
         this.customerService = customerService;
         this.repairOrderToRepairOrderOutDTO = repairOrderToRepairOrderOutDTO;
         this.repairOrderProjectionToRepairOrderOutDTO = repairOrderProjectionToRepairOrderOutDTO;
+        this.repairOrderProjectionListToRepairProjectionOutDTOList = repairOrderProjectionListToRepairProjectionOutDTOList;
     }
 
 
@@ -63,17 +68,33 @@ public class RepairOrderService implements IRepairOrderService{
         IRepairOrderProjection iRepairOrderProjection = this.findRepairOrderProjection(repairOrderId);
         RepairOrderOutDTO repairOrderOutDTO = repairOrderProjectionToRepairOrderOutDTO.map(iRepairOrderProjection);
 
+        Double totalCost = this.totalCostRepairs(repairOrderOutDTO.getRepairs());
+        repairOrderOutDTO.setTotalCost(totalCost);
+
         return repairOrderOutDTO;
     }
 
     @Override
     public List<RepairOrderOutDTO> findAllRepairOrders() {
-        return null;
+        List<IRepairOrderProjection> repairOrderProjectionList = repairOrderRepository.findAllProjectedBy();
+        List<RepairOrderOutDTO> repairOrderOutDTOList = repairOrderProjectionListToRepairProjectionOutDTOList.map(repairOrderProjectionList);
+
+        return repairOrderOutDTOList;
     }
 
     @Override
-    public RepairOrderOutDTO updateRepairOrder(Long repairOrderId, RepairOrderInDTO repairOrderInDTO) {
-        return null;
+    public String updateRepairOrder(Long repairOrderId, RepairOrderInDTO repairOrderInDTO) {
+
+        RepairOrder repairOrder = this.findRepairOrder(repairOrderId);
+        Customer customer = customerService.findCustomer(repairOrderInDTO.getCustomerId());
+        Vehicle vehicle = vehicleService.findVehicle(repairOrderInDTO.getVehicleId());
+
+        repairOrder.setCustomer(customer);
+        repairOrder.setVehicle(vehicle);
+
+        repairOrderRepository.save(repairOrder);
+
+        return "RepairOrder id: " + repairOrderId + " was successfully updated!";
     }
 
     @Override
@@ -89,11 +110,22 @@ public class RepairOrderService implements IRepairOrderService{
     /*------------------------------------------------------------------------------------------------*/
 
 
+    public RepairOrder findRepairOrder (Long repairOrderId) {
+        return repairOrderRepository.findById(repairOrderId)
+                .orElseThrow(() -> new GeneralException("RepairOrderId does not exist.", HttpStatus.NOT_FOUND));
+    }
+
     public IRepairOrderProjection findRepairOrderProjection(Long repairOrderId) {
-        Optional<IRepairOrderProjection> optionalIRepairOrderProjection = repairOrderRepository.findRepairOrderById(repairOrderId) ;
-        if (optionalIRepairOrderProjection.isEmpty()) {
-            throw new GeneralException("repairOrderId does not exist.", HttpStatus.NOT_FOUND);
-        }
-        return optionalIRepairOrderProjection.get();
+        return repairOrderRepository.findRepairOrderById(repairOrderId)
+                .orElseThrow(() -> new GeneralException("repairOrderId does not exist.", HttpStatus.NOT_FOUND));
+    }
+
+    public Double totalCostRepairs (Map<String, Double> repairs) {
+        Double totalCost = repairs.values()
+                .stream()
+                .mapToDouble(Double::doubleValue)
+                .sum();
+
+        return totalCost;
     }
 }
