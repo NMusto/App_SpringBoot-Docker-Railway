@@ -15,8 +15,12 @@ public interface IRepairOrderService {
 
     String addRepairs (Long repairOrderId, Map<String, Double> repairs);
 
-    String deleteRepairs (Long repairOrderId, String key);
+    String deleteRepair (Long repairOrderId, String key);
 
+    String updateRepairCompleted (Long repairOrderId, boolean value);
 
+    List<RepairOrderOutDTO> findPendingRepairOrders ();
+
+    List<RepairOrderOutDTO> findCompletedRepairOrders ();
 
 }

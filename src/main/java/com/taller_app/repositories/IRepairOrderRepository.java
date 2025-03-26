@@ -15,5 +15,7 @@ public interface IRepairOrderRepository extends JpaRepository<RepairOrder, Long>
 
     List<IRepairOrderProjection> findAllProjectedBy();
 
+    List<IRepairOrderProjection> findRepairOrdersByRepairCompleted(boolean completed);
+
 
 }

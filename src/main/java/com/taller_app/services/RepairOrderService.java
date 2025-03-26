@@ -117,7 +117,7 @@ public class RepairOrderService implements IRepairOrderService{
     }
 
     @Override
-    public String deleteRepairs (Long repairOrderId, String key) {
+    public String deleteRepair (Long repairOrderId, String key) {
         RepairOrder repairOrder = this.findRepairOrder(repairOrderId);
 
         if (repairOrder.getRepairs().containsKey(key)) {
@@ -127,6 +127,29 @@ public class RepairOrderService implements IRepairOrderService{
         repairOrderRepository.save(repairOrder);
         return "Repair successfully removed from order id " + repairOrderId;
     }
+
+    @Override
+    public String updateRepairCompleted (Long repairOrderId, boolean value) {
+        RepairOrder repairOrder = this.findRepairOrder(repairOrderId);
+        repairOrder.setRepairCompleted(value);
+        repairOrderRepository.save(repairOrder);
+        return "RepairOrder status successfully updated in order id " + repairOrderId;
+    }
+
+    @Override
+    public List<RepairOrderOutDTO> findPendingRepairOrders () {
+        List<IRepairOrderProjection> repairOrderProjectionList = repairOrderRepository.findRepairOrdersByRepairCompleted(false);
+        List<RepairOrderOutDTO> repairOrderOutDTOList = repairOrderProjectionListToRepairProjectionOutDTOList.map(repairOrderProjectionList);
+        return repairOrderOutDTOList;
+    }
+
+    @Override
+    public List<RepairOrderOutDTO> findCompletedRepairOrders () {
+        List<IRepairOrderProjection> repairOrderProjectionList = repairOrderRepository.findRepairOrdersByRepairCompleted(true);
+        List<RepairOrderOutDTO> repairOrderOutDTOList = repairOrderProjectionListToRepairProjectionOutDTOList.map(repairOrderProjectionList);
+        return repairOrderOutDTOList;
+    }
+
 
 
 
