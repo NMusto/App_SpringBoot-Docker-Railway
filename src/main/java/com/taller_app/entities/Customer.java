@@ -23,9 +23,10 @@ public class Customer {
     private String dni;
     private String phone;
 
-    @OneToMany(targetEntity = Vehicle.class, fetch = FetchType.LAZY, mappedBy = "customer")
+
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vehicle> vehicles;
 
-    @OneToMany(targetEntity = RepairOrder.class, mappedBy = "customer", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<RepairOrder> orders;
 }

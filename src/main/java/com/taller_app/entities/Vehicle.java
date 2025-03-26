@@ -16,11 +16,11 @@ public class Vehicle {
     private String number;
     private String brand;
 
-    @ManyToOne(targetEntity = Customer.class)
+    @ManyToOne()
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToOne(mappedBy = "vehicle")
+    @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
     RepairOrder repairOrder;
 }
 

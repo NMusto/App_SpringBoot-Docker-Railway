@@ -99,7 +99,9 @@ public class RepairOrderService implements IRepairOrderService{
 
     @Override
     public String deleteRepairOrder(Long repairOrderId) {
-        return null;
+        RepairOrder repairOrder = this.findRepairOrder(repairOrderId);
+        repairOrderRepository.deleteById(repairOrderId);
+        return "RepairOrder id: " + repairOrderId + " was successfully deleted!";
     }
 
 

@@ -77,10 +77,8 @@ public class CustomerService implements ICustomerService{
     }
 
     @Override
-    @Transactional
-    public String deleteCustomer(Long customerId) {this.findCustomer(customerId);
-
-        customerRepository.deleteCustomerInVehicles(customerId);
+    public String deleteCustomer(Long customerId) {
+        this.findCustomer(customerId);
         customerRepository.deleteById(customerId);
         return "Customer id: " + customerId + " was successfully deleted!";
     }

@@ -19,11 +19,11 @@ public class RepairOrder {
     private boolean repairCompleted;
     private Double totalCost;
 
-    @ManyToOne(targetEntity = Customer.class)
+    @ManyToOne()
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToOne(targetEntity = Vehicle.class)
+    @OneToOne()
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
