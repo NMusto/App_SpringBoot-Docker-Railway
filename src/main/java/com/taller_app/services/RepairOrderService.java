@@ -104,6 +104,29 @@ public class RepairOrderService implements IRepairOrderService{
         return "RepairOrder id: " + repairOrderId + " was successfully deleted!";
     }
 
+    @Override
+    public String addRepairs (Long repairOrderId, Map<String, Double> newRepairs) {
+        RepairOrder repairOrder = this.findRepairOrder(repairOrderId);
+
+        if ( newRepairs != null && !newRepairs.isEmpty()) {
+            repairOrder.getRepairs().putAll(newRepairs);
+        }
+
+        repairOrderRepository.save(repairOrder);
+        return "Repairs successfully added to the order id " + repairOrderId;
+    }
+
+    @Override
+    public String deleteRepairs (Long repairOrderId, String key) {
+        RepairOrder repairOrder = this.findRepairOrder(repairOrderId);
+
+        if (repairOrder.getRepairs().containsKey(key)) {
+            repairOrder.getRepairs().remove(key);
+        }
+
+        repairOrderRepository.save(repairOrder);
+        return "Repair successfully removed from order id " + repairOrderId;
+    }
 
 
 

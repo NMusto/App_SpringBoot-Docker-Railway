@@ -4,6 +4,7 @@ import com.taller_app.dtos.inDTOs.RepairOrderInDTO;
 import com.taller_app.dtos.outDTOs.RepairOrderOutDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IRepairOrderService {
     RepairOrderOutDTO createRepairOrder(RepairOrderInDTO repairOrderInDTO);
@@ -12,5 +13,10 @@ public interface IRepairOrderService {
     String updateRepairOrder (Long repairOrderId, RepairOrderInDTO repairOrderInDTO);
     String deleteRepairOrder (Long repairOrderId);
 
-    
+    String addRepairs (Long repairOrderId, Map<String, Double> repairs);
+
+    String deleteRepairs (Long repairOrderId, String key);
+
+
+
 }
